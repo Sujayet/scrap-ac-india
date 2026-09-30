@@ -99,7 +99,7 @@ async function signup(){try{var e=emailEl.value.trim(),p=passwordEl.value;if(!e|
 async function logout(){try{await db.auth.signOut()}finally{records=[];render();showMessage("Logged out.",true)}}
 async function load(){var r=await db.from("pickups").select("*").order("created_at",{ascending:false});if(r.error){showMessage("Database error: "+r.error.message,false);return}records=r.data||[];render()}
 formEl.addEventListener("submit",async function(e){e.preventDefault();var u=await db.auth.getUser();if(!u.data.user){showMessage("Please login before saving a pickup.",false);return}var ex=executiveEl.value==="Pickup Team 1"?"9674627848":"";var p={pickup_id:pickupId(),customer_name:customerEl.value,mobile:mobileEl.value,alternate_mobile:alternateEl.value,city:cityEl.value,area:areaEl.value,pincode:pincodeEl.value,address:addressEl.value,maps_link:mapsEl.value,brand:brandEl.value,ac_type:typeEl.value,capacity:capacityEl.value,condition:conditionEl.value,quantity:Number(quantityEl.value||1),amount:Number(amountEl.value||0),pickup_date:dateEl.value,pickup_time:timeEl.value,pickup_executive:executiveEl.value,executive_phone:ex,payment_method:paymentEl.value,status:statusEl.value,notes:notesEl.value};var r=await db.from("pickups").insert(p);if(r.error){showMessage("Pickup save error: "+r.error.message,false);return}showMessage("Pickup saved: "+p.pickup_id,true);await load();window.open(whatsapp(p.mobile,customerMessage(p)),"_blank")}
-function clearForm(){form.reset();date.value=iso(new Date(Date.now()+86400000));areasUpdate()}
+function clearForm(){formEl.reset();dateEl.value=iso(new Date(Date.now()+86400000));areasUpdate()}
 render();db.auth.getSession().then(function(r){if(r.data.session)load()});
 </script>
 </body>
