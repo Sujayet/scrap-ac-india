@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scrap AC India - Pickup Manager</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--primary:#1769ff;--green:#10b981;--border:#e5e7eb}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:#111827;color:#fff;padding:18px 22px}header h1{margin:0;font-size:21px}header p{margin:4px 0 0;color:#cbd5e1;font-size:13px}
+.wrap{max-width:1200px;margin:auto;padding:20px}.grid{display:grid;grid-template-columns:1.35fr .65fr;gap:18px}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 4px 18px #1018280b}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat b{display:block;font-size:24px;margin-top:7px}.stat span{color:var(--muted);font-size:12px}
+h2{font-size:17px;margin:0 0 15px}.section{border-top:1px solid var(--border);padding-top:18px;margin-top:18px}
+.form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}
+label{font-size:12px;font-weight:700;color:#344054;display:block;margin-bottom:6px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d0d5dd;border-radius:10px;font-size:14px;background:#fff}textarea{min-height:75px}
+button{border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer}.primary{background:var(--primary);color:#fff}.green{background:var(--green);color:#fff}.secondary{background:#eef2f7;color:#172033}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.list{display:flex;flex-direction:column;gap:10px;max-height:600px;overflow:auto}.item{border:1px solid var(--border);border-radius:12px;padding:12px}.item strong{display:block}.item small{color:var(--muted)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#ecfdf3;color:#047857;font-size:11px;font-weight:700;margin-top:7px}.note{background:#f8fafc;border:1px dashed #cbd5e1;padding:12px;border-radius:10px;color:#475467;font-size:12px}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:1fr}.wrap{padding:12px}}
+</style>
+</head>
+<body>
+<header><h1>SCRAP AC INDIA</h1><p>Pickup Management & Customer Confirmation System</p></header>
+<div class="wrap">
+<div class="card">
+<h2>Cloud Login</h2>
+<div class="form">
+<div><label>Email</label><input id="email" type="email" placeholder="admin@example.com"></div>
+<div><label>Password</label><input id="password" type="password" placeholder="Minimum 6 characters"></div>
+</div>
+<div class="actions"><button class="primary" onclick="login()">Login</button><button class="secondary" onclick="signup()">Create Account</button><button class="secondary" onclick="logout()">Logout</button></div>
+<div id="msg" class="note">Login to save and view pickups in the cloud.</div>
+</div>
+<div class="stats">
+<div class="card stat"><span>Today's Pickups</span><b id="today">0</b></div>
+<div class="card stat"><span>Tomorrow</span><b id="tomorrow">0</b></div>
+<div class="card stat"><span>Scheduled</span><b id="scheduled">0</b></div>
+<div class="card stat"><span>Total Value</span><b id="total">₹0</b></div>
+</div>
+<div class="grid">
+<div class="card">
+<h2>New Pickup Booking</h2>
+<form id="form">
+<div class="form">
+<div><label>Customer Name *</label><input id="customer" required></div>
+<div><label>Mobile Number *</label><input id="mobile" required inputmode="numeric"></div>
+<div><label>Alternate Number</label><input id="alternate"></div>
+<div><label>City *</label><select id="city"><option>Jamshedpur</option><option>Kolkata</option><option>Ranchi</option><option>Adityapur</option><option>Dhanbad</option><option>Other</option></select></div>
+<div><label>Area / Locality</label><select id="area"></select></div>
+<div><label>Pincode</label><input id="pincode"></div>
+<div class="full"><label>Pickup Address *</label><textarea id="address" required></textarea></div>
+<div class="full"><label>Google Maps Location</label><input id="maps" placeholder="Paste Google Maps link"></div>
+</div>
+<div class="section"><h2>AC Details</h2><div class="form">
+<div><label>Brand *</label><select id="brand"></select></div><div><label>AC Type *</label><select id="type"></select></div>
+<div><label>Capacity *</label><select id="capacity"></select></div><div><label>Condition *</label><select id="condition"></select></div>
+<div><label>Quantity</label><input id="quantity" type="number" min="1" value="1"></div><div><label>Final Agreed Amount (₹)</label><input id="amount" type="number" min="0" value="0"></div>
+</div></div>
+<div class="section"><h2>Pickup Schedule</h2><div class="form">
+<div><label>Pickup Date *</label><input id="date" type="date" required></div><div><label>Pickup Time *</label><select id="time"></select></div>
+<div><label>Pickup Executive</label><select id="executive"><option>Pickup Team 1</option><option>Pickup Team 2</option><option>Pickup Team 3</option></select></div>
+<div><label>Payment Method</label><select id="payment"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Pending</option></select></div>
+<div><label>Status</label><select id="status"><option>Scheduled</option><option>Confirmed</option><option>Assigned</option><option>Out for Pickup</option><option>Picked Up</option><option>Paid</option><option>Completed</option><option>Cancelled</option></select></div>
+<div><label>Internal Notes</label><input id="notes"></div>
+</div></div>
+<div class="actions"><button class="primary" type="submit">Confirm Pickup</button><button class="secondary" type="button" onclick="clearForm()">Clear</button></div>
+</form>
+</div>
+<div class="card"><h2>Recent Pickups</h2><div id="list" class="list"></div></div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL="https://zzhvwxnafpifsmvkdqdf.supabase.co";
+var SUPABASE_KEY="sb_publishable_ueOa8I-R2ZaVMuoqnvLvYA_cHrtdrd4";
+var db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var brands=["Voltas","LG","Samsung","Daikin","Blue Star","Carrier","Hitachi","Panasonic","Godrej","Lloyd","Haier","Whirlpool","O General","Mitsubishi Electric","Mitsubishi Heavy","Toshiba","Sharp","IFB","Onida","Videocon","Trane","Electrolux","Kelvinator","Croma","Sansui","Akai","Other"];
+var types=["Split AC","Window AC","Portable AC","Cassette AC","Tower AC","Central AC","Other"];
+var caps=["0.75 Ton","1 Ton","1.2 Ton","1.5 Ton","1.8 Ton","2 Ton","2.5 Ton","3 Ton","Other"];
+var conditions=["Working","Partially Working","Non-Working","Damaged","Scrap"];
+var areas={Jamshedpur:["Sakchi","Bistupur","Mango","Sonari","Kadma","Telco","Jugsalai","Birsanagar","Golmuri","Adityapur","Other"],Kolkata:["Topsia","Park Circus","Tangra","Kasba","Garia","Behala","Salt Lake","New Town","Other"],Ranchi:["Harmu","Lalpur","Doranda","Kanke","Morabadi","Other"],Adityapur:["Adityapur Colony","Adityapur Industrial Area","Other"],Dhanbad:["Bank More","Saraidhela","Hirapur","Other"],Other:["Other"]};
+function fill(id,a){document.getElementById(id).innerHTML=a.map(function(x){return "<option>"+x+"</option>"}).join("")}
+fill("brand",brands);fill("type",types);fill("capacity",caps);fill("condition",conditions);fill("time",["8:00 AM - 10:00 AM","10:00 AM - 12:00 PM","12:00 PM - 2:00 PM","2:00 PM - 4:00 PM","4:00 PM - 6:00 PM","6:00 PM - 8:00 PM"]);
+function areasUpdate(){fill("area",areas[city.value]||["Other"])}city.onchange=areasUpdate;areasUpdate();
+function pad(n){return String(n).padStart(2,"0")}function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}date.value=iso(new Date(Date.now()+86400000));
+var records=[];
+function money(n){return "₹"+Number(n||0).toLocaleString("en-IN")}
+function pickupId(){var d=new Date();return "SAC-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+String(Date.now()).slice(-4)}
+function whatsapp(number,message){var n=String(number).replace(/\D/g,"");if(n.length===10)n="91"+n;return "https://wa.me/"+n+"?text="+encodeURIComponent(message)}
+function customerMessage(p){return "Hello "+p.customer_name+",\n\nYour Scrap AC pickup has been confirmed with Scrap AC India.\n\nAC: "+p.brand+" "+p.capacity+"\nCondition: "+p.condition+"\nPickup: "+p.pickup_date+"\nTime: "+p.pickup_time+"\nLocation: "+p.city+", "+p.area+"\nAgreed Amount: "+money(p.amount)+"\n\nOur pickup team will contact you before arrival.\n\nThank you for choosing Scrap AC India."}
+function render(){var t=iso(new Date()),tm=iso(new Date(Date.now()+86400000));today.textContent=records.filter(function(p){return p.pickup_date===t}).length;tomorrow.textContent=records.filter(function(p){return p.pickup_date===tm}).length;scheduled.textContent=records.filter(function(p){return ["Scheduled","Confirmed","Assigned","Out for Pickup"].indexOf(p.status)>=0}).length;total.textContent=money(records.reduce(function(s,p){return s+Number(p.amount||0)},0));list.innerHTML=records.map(function(p){return "<div class='item'><strong>"+p.customer_name+" · "+p.brand+" "+p.capacity+"</strong><small>"+p.pickup_id+" · "+p.city+" · "+p.pickup_date+" · "+money(p.amount)+"</small><br><span class='badge'>"+p.status+"</span><div class='actions'><button class='green' onclick='window.open(whatsapp("+JSON.stringify(p.mobile)+",customerMessage("+JSON.stringify(p)+")),"_blank")'>Customer WhatsApp</button></div></div>"}).join("")||"<div class='note'>No pickups yet.</div>"}
+async function login(){var r=await db.auth.signInWithPassword({email:email.value.trim(),password:password.value});msg.textContent=r.error?r.error.message:"Logged in successfully.";if(!r.error)load()}
+async function signup(){var r=await db.auth.signUp({email:email.value.trim(),password:password.value});msg.textContent=r.error?r.error.message:"Account created. Check email if confirmation is enabled."}
+async function logout(){await db.auth.signOut();records=[];render();msg.textContent="Logged out."}
+async function load(){var r=await db.from("pickups").select("*").order("created_at",{ascending:false});if(r.error){msg.textContent=r.error.message;return}records=r.data||[];render()}
+form.onsubmit=async function(e){e.preventDefault();var u=await db.auth.getUser();if(!u.data.user){msg.textContent="Please login before saving a pickup.";return}var ex=executive.value==="Pickup Team 1"?"9674627848":"";var p={pickup_id:pickupId(),customer_name:customer.value,mobile:mobile.value,alternate_mobile:alternate.value,city:city.value,area:area.value,pincode:pincode.value,address:address.value,maps_link:maps.value,brand:brand.value,ac_type:type.value,capacity:capacity.value,condition:condition.value,quantity:Number(quantity.value||1),amount:Number(amount.value||0),pickup_date:date.value,pickup_time:time.value,pickup_executive:executive.value,executive_phone:ex,payment_method:payment.value,status:status.value,notes:notes.value};var r=await db.from("pickups").insert(p);if(r.error){msg.textContent=r.error.message;return}msg.textContent="Pickup saved: "+p.pickup_id;await load();window.open(whatsapp(p.mobile,customerMessage(p)),"_blank")}
+function clearForm(){form.reset();date.value=iso(new Date(Date.now()+86400000));areasUpdate()}
+render();db.auth.getSession().then(function(r){if(r.data.session)load()});
+</script>
+</body>
+</html>
